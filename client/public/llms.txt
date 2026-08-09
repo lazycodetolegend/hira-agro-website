@@ -1,0 +1,12 @@
+# Hira Agro Industry
+
+> Enterprise Rice Milling & Grain Processing System
+
+## Overview
+Hira Agro Industry processes and distributes premium Basmati, Sona Masuri, and Parboiled Sella rice to wholesalers, retailers, and commercial buyers.
+
+## Key Links
+- [Homepage](http://localhost:5173/)
+- [Product Catalogue](http://localhost:5173/products)
+- [Contact Sales](http://localhost:5173/contact)
+- [Staff Login](http://localhost:5173/login)
