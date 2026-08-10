@@ -55,14 +55,6 @@ npm run dev     # Starts client on port 3000
 | http://localhost:3000    | Public website       |
 | http://localhost:3000/login | Staff login       |
 
-### Default Admin Account
-
-| Field    | Value               |
-|----------|---------------------|
-| Email    | admin@hiraagro.com  |
-| Password | Admin@123           |
-
-> ⚠️ **Change the default admin password after first login!**
 
 ## User Roles
 
