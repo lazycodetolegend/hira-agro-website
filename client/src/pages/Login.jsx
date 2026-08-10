@@ -113,7 +113,7 @@ const Login = () => {
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin  or  hiraagroindustry51@gmail.com"
+              placeholder="Enter your username or email"
               required
               className={inputBase}
             />

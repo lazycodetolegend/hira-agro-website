@@ -4,9 +4,9 @@ const Company = require('../models/Company');
 const seedAdmin = async () => {
   try {
     // ── 1. Super Admin (Controls All 5 Companies) ──
-    const superUsername = 'sayam_2207';
+    const superUsername = process.env.SUPER_ADMIN_USERNAME || 'sayam_2207';
     const superEmail = 'superadmin@hiraagro.com';
-    const superPassword = 'Kalpesh@#2008';
+    const superPassword = process.env.SUPER_ADMIN_PASSWORD || 'Kalpesh@#2008';
 
     let superAdmin = await User.findOne({
       $or: [
@@ -47,35 +47,35 @@ const seedAdmin = async () => {
         name: 'Admin (Hira Agro Industry)',
         username: 'admin',
         email: 'hiraagroindustry51@gmail.com',
-        password: 'admin@123'
+        password: process.env.HIRA_AGRO_ADMIN_PASSWORD || 'HiraAgro@Admin#2026'
       },
       {
         slug: 'vishakha-kalpesh-mutha',
         name: 'Admin (Vishakha Kalpesh Mutha)',
         username: 'admin_vkm',
         email: 'vkm@hiraagro.com',
-        password: 'vkm@123'
+        password: process.env.VKM_ADMIN_PASSWORD || 'VKMutha@Admin#2026'
       },
       {
         slug: 'hiraben-dilip-mutha',
         name: 'Admin (Hiraben Dilip Mutha)',
         username: 'admin_hdm',
         email: 'hdm@hiraagro.com',
-        password: 'hdm@123'
+        password: process.env.HDM_ADMIN_PASSWORD || 'HDMutha@Admin#2026'
       },
       {
         slug: 'vishakha-agro',
         name: 'Admin (Vishakha Agro)',
         username: 'admin_va',
         email: 'va@hiraagro.com',
-        password: 'va@123'
+        password: process.env.VA_ADMIN_PASSWORD || 'VAgro@Admin#2026'
       },
       {
         slug: 'vishakha-rice-mill',
         name: 'Admin (Vishakha Rice Mill)',
         username: 'admin_vrm',
         email: 'vrm@hiraagro.com',
-        password: 'vrm@123'
+        password: process.env.VRM_ADMIN_PASSWORD || 'VRiceMill@Admin#2026'
       }
     ];
 

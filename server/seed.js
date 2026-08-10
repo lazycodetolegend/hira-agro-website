@@ -14,7 +14,7 @@ const seedDB = async () => {
       await User.create({
         name: 'Admin',
         email: adminEmail,
-        password: 'Admin@123',
+        password: process.env.HIRA_AGRO_ADMIN_PASSWORD || 'HiraAgro@Admin#2026',
         role: 'admin'
       });
       console.log('Admin user created successfully');
