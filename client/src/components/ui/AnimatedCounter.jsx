@@ -4,13 +4,18 @@ import { useInView } from 'framer-motion';
 const AnimatedCounter = ({ value = '', className = '' }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
-  const [displayValue, setDisplayValue] = useState(0);
 
   const strValue = String(value || '');
   const rawNumberMatch = strValue.replace(/,/g, '').match(/\d+/);
   const targetNumber = rawNumberMatch ? parseInt(rawNumberMatch[0], 10) : 0;
   const hasComma = strValue.includes(',');
   const suffix = strValue.replace(/[\d,]/g, '');
+
+  const format = (n) => (hasComma ? n.toLocaleString('en-IN') : n);
+
+  // Render the real value by default so crawlers, link previews and
+  // no-JavaScript visitors never see a misleading "0+".
+  const [displayValue, setDisplayValue] = useState(targetNumber);
 
   useEffect(() => {
     if (!isInView || targetNumber === 0) return;
@@ -20,6 +25,8 @@ const AnimatedCounter = ({ value = '', className = '' }) => {
     const steps = 40;
     const increment = targetNumber / steps;
     const stepTime = duration / steps;
+
+    setDisplayValue(0);
 
     const timer = setInterval(() => {
       start += increment;
@@ -34,13 +41,9 @@ const AnimatedCounter = ({ value = '', className = '' }) => {
     return () => clearInterval(timer);
   }, [isInView, targetNumber]);
 
-  const formattedNumber = hasComma
-    ? displayValue.toLocaleString('en-IN')
-    : displayValue;
-
   return (
     <span ref={ref} className={`font-heading text-4xl md:text-6xl text-forest ${className}`}>
-      {isInView ? `${formattedNumber}${suffix}` : `0${suffix}`}
+      {`${format(displayValue)}${suffix}`}
     </span>
   );
 };
