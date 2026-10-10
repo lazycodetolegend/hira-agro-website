@@ -5,6 +5,14 @@ const connectDB = require('./config/db');
 
 const seedDB = async () => {
   try {
+    // No literal fallback: this repository is public, so a default here would
+    // be a published production password.
+    const adminPassword = process.env.HIRA_AGRO_ADMIN_PASSWORD;
+    if (!adminPassword) {
+      console.error('❌ HIRA_AGRO_ADMIN_PASSWORD is not set. Refusing to seed.');
+      process.exit(1);
+    }
+
     await connectDB();
 
     const adminEmail = 'admin@hiraagro.com';
@@ -14,7 +22,7 @@ const seedDB = async () => {
       await User.create({
         name: 'Admin',
         email: adminEmail,
-        password: process.env.HIRA_AGRO_ADMIN_PASSWORD || 'HiraAgro@Admin#2026',
+        password: adminPassword,
         role: 'admin'
       });
       console.log('Admin user created successfully');

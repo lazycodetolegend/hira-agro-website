@@ -1,6 +1,16 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Fail closed. This repository is public, so a default signing key such as
+// 'secret123' would let anyone forge an admin token.
+function jwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not configured — refusing to verify tokens');
+  }
+  return secret;
+}
+
 const protect = async (req, res, next) => {
   let token;
 
@@ -13,7 +23,7 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
+    const decoded = jwt.verify(token, jwtSecret());
     req.user = await User.findById(decoded.id).select('-password').populate('companyId');
     if (!req.user) {
       return res.status(401).json({ message: 'Not authorized, user not found' });
@@ -46,7 +56,7 @@ const authorize = (...roles) => {
       return res.status(403).json({ message: `User role ${req.user.role} is not authorized to access this route` });
     }
     next();
-  };
+  }
 };
 
-module.exports = { protect, authorize, auth: protect };
+module.exports = { protect, authorize, auth: protect, jwtSecret };

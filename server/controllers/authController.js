@@ -1,6 +1,22 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const sendEmail = require('../utils/sendEmail');
+const crypto = require('crypto');
+
+// Fail closed rather than falling back to a public default signing key.
+function jwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not configured — refusing to sign tokens');
+  }
+  return secret;
+}
+
+// User input must never be compiled straight into a RegExp: it enables
+// catastrophic backtracking (ReDoS) and unintended wildcard matching.
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 // POST /api/auth/login
 const login = async (req, res) => {
@@ -14,13 +30,14 @@ const login = async (req, res) => {
 
     const cleanIdentifier = rawIdentifier.toLowerCase();
 
+    const safeIdentifier = escapeRegex(cleanIdentifier);
     // Regex match to handle case-insensitive match for username or email
     const user = await User.findOne({
       $or: [
         { email: cleanIdentifier },
         { username: cleanIdentifier },
-        { email: { $regex: new RegExp(`^${cleanIdentifier}$`, 'i') } },
-        { username: { $regex: new RegExp(`^${cleanIdentifier}$`, 'i') } }
+        { email: { $regex: new RegExp(`^${safeIdentifier}$`, 'i') } },
+        { username: { $regex: new RegExp(`^${safeIdentifier}$`, 'i') } }
       ]
     }).populate('companyId').select('+password');
 
@@ -35,7 +52,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id, role: user.role, companyId: user.companyId ? user.companyId._id : null },
-      process.env.JWT_SECRET || 'secret123',
+      jwtSecret(),
       { expiresIn: '7d' }
     );
 
@@ -125,10 +142,15 @@ const forgotPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: 'No account found with this ID or Email' });
+      // Same response whether or not the account exists, so this endpoint
+      // cannot be used to enumerate valid staff IDs.
+      return res.status(200).json({
+        message: 'If that account exists, a 6-digit reset code has been sent to its registered email address.'
+      });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Math.random() is not cryptographically secure and the code is guessable.
+    const otp = crypto.randomInt(100000, 1000000).toString();
     const expires = new Date(Date.now() + 15 * 60 * 1000);
 
     user.resetPasswordToken = otp;
@@ -147,16 +169,11 @@ const forgotPassword = async (req, res) => {
       text
     });
 
-    const hasRealSmtp = Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
-
-    const message = hasRealSmtp
-      ? `Password reset OTP has been sent to ${targetEmail}. Check your email inbox!`
-      : `Reset OTP generated: ${otp} (Demo Mode — Enter code ${otp} to reset password)`;
-
+    // The OTP is delivered by email ONLY. Returning it in an API response
+    // would let anyone reset any account, including the super admin, with no
+    // credentials at all.
     res.status(200).json({
-      message,
-      email: targetEmail,
-      otp: hasRealSmtp ? undefined : otp
+      message: 'If that account exists, a 6-digit reset code has been sent to its registered email address.'
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -219,8 +236,17 @@ const deleteUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (user.role === 'admin') {
-      return res.status(403).json({ message: 'Cannot delete admin accounts' });
+    if (user.role !== 'manager') {
+      return res.status(403).json({ message: 'Only manager accounts can be removed' });
+    }
+
+    // An admin may only remove managers inside their own company.
+    if (req.user.role !== 'super_admin') {
+      const ownCompany = req.companyId ? req.companyId.toString() : null;
+      const targetCompany = user.companyId ? user.companyId.toString() : null;
+      if (!ownCompany || !targetCompany || ownCompany !== targetCompany) {
+        return res.status(403).json({ message: 'Not authorized to remove this user' });
+      }
     }
 
     await User.findByIdAndDelete(req.params.id);
