@@ -70,7 +70,7 @@ const getProduct = async (req, res) => {
  */
 const createProduct = async (req, res) => {
   try {
-    const { name, variety, ratePerKg, unit, description, stockQuantity, isAvailable } = req.body;
+    const { name, variety, ratePerKg, unit, description, stockQuantity, lowStockThreshold, isAvailable } = req.body;
 
     if (!name || !variety || !ratePerKg) {
       return res.status(400).json({ message: 'Name, variety, and ratePerKg are required' });
@@ -80,29 +80,38 @@ const createProduct = async (req, res) => {
 
     if (req.file) {
       if (cloudinary) {
-        const result = await cloudinary.uploader.upload(req.file.path, { folder: 'hira-agro/products' });
-        photoUrl = result.secure_url;
-        fs.unlinkSync(req.file.path);
+        try {
+          const result = await cloudinary.uploader.upload(req.file.path, { folder: 'hira-agro/products' });
+          photoUrl = result.secure_url;
+          if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        } catch (cloudErr) {
+          console.warn('Cloudinary upload failed, falling back to local file:', cloudErr.message);
+          photoUrl = '/uploads/' + req.file.filename;
+        }
       } else {
         photoUrl = '/uploads/' + req.file.filename;
       }
     }
 
+    const companyId = req.companyId || req.user?.companyId?._id || req.user?.companyId;
+
     const product = await Product.create({
-      name,
-      variety,
-      ratePerKg,
-      unit,
-      description,
-      stockQuantity,
-      isAvailable: isAvailable !== undefined ? isAvailable : true,
+      name: name.trim(),
+      variety: variety.trim(),
+      ratePerKg: Number(ratePerKg),
+      unit: unit || 'kg',
+      description: description || '',
+      stockQuantity: stockQuantity !== undefined && stockQuantity !== '' ? Number(stockQuantity) : 0,
+      lowStockThreshold: lowStockThreshold !== undefined && lowStockThreshold !== '' ? Number(lowStockThreshold) : 50,
+      isAvailable: isAvailable === 'true' || isAvailable === true || isAvailable === undefined,
       photoUrl,
-      companyId: req.companyId
+      companyId
     });
 
     res.status(201).json({ product });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    console.error('Create product error:', error);
+    res.status(500).json({ message: error.message || 'Server Error' });
   }
 };
 
@@ -119,7 +128,7 @@ const updateProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    if (product.companyId && product.companyId.toString() !== req.companyId.toString()) {
+    if (product.companyId && req.companyId && product.companyId.toString() !== req.companyId.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this product' });
     }
 
@@ -127,15 +136,41 @@ const updateProduct = async (req, res) => {
 
     if (req.file) {
       if (cloudinary) {
-        const result = await cloudinary.uploader.upload(req.file.path, { folder: 'hira-agro/products' });
-        photoUrl = result.secure_url;
-        fs.unlinkSync(req.file.path);
+        try {
+          const result = await cloudinary.uploader.upload(req.file.path, { folder: 'hira-agro/products' });
+          photoUrl = result.secure_url;
+          if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        } catch (cloudErr) {
+          console.warn('Cloudinary upload failed, falling back to local file:', cloudErr.message);
+          photoUrl = '/uploads/' + req.file.filename;
+        }
       } else {
         photoUrl = '/uploads/' + req.file.filename;
       }
     }
 
-    const updatedData = { ...req.body, photoUrl };
+    const updatedData = { ...req.body };
+    if (photoUrl !== undefined) {
+      updatedData.photoUrl = photoUrl;
+    }
+
+    if (updatedData.ratePerKg !== undefined && updatedData.ratePerKg !== '') {
+      updatedData.ratePerKg = Number(updatedData.ratePerKg);
+    }
+    if (updatedData.stockQuantity !== undefined && updatedData.stockQuantity !== '') {
+      updatedData.stockQuantity = Number(updatedData.stockQuantity);
+    }
+    if (updatedData.lowStockThreshold !== undefined && updatedData.lowStockThreshold !== '') {
+      updatedData.lowStockThreshold = Number(updatedData.lowStockThreshold);
+    }
+    if (updatedData.isAvailable !== undefined) {
+      updatedData.isAvailable = updatedData.isAvailable === 'true' || updatedData.isAvailable === true;
+    }
+
+    // Do not overwrite companyId with empty or undefined
+    if (!updatedData.companyId) {
+      delete updatedData.companyId;
+    }
 
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -145,7 +180,8 @@ const updateProduct = async (req, res) => {
 
     res.status(200).json({ product: updatedProduct });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    console.error('Update product error:', error);
+    res.status(500).json({ message: error.message || 'Server Error' });
   }
 };
 

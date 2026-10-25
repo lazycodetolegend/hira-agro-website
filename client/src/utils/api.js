@@ -9,6 +9,11 @@ const api = axios.create({
 
 // Add auth token and company header to requests
 api.interceptors.request.use((config) => {
+  // If sending FormData, delete manual Content-Type header so browser/axios sets multipart boundary correctly
+  if (config.data instanceof FormData && config.headers) {
+    delete config.headers['Content-Type'];
+  }
+
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

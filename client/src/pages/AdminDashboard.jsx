@@ -282,14 +282,10 @@ const AdminDashboard = ({ superAdminMode = false, companyData = null }) => {
 
     try {
       if (editingProduct) {
-        await api.put(`/products/${editingProduct._id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        await api.put(`/products/${editingProduct._id}`, formData);
         toast.success('Product updated');
       } else {
-        await api.post('/products', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        await api.post('/products', formData);
         toast.success('Product created');
       }
       setShowProductForm(false);
