@@ -2,6 +2,12 @@ const Invoice = require('../models/Invoice');
 const Sale = require('../models/Sale');
 const Company = require('../models/Company');
 
+// Never compile raw user input into a RegExp — it allows catastrophic
+// backtracking (ReDoS) and unintended wildcard matching.
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // Number to Words function (Indian Numbering System)
 const numberToWordsIndian = (num) => {
   const amount = Math.round(num);
@@ -53,9 +59,10 @@ const getInvoices = async (req, res) => {
     }
 
     if (search) {
+      const safeSearch = escapeRegex(search);
       query.$or = [
-        { invoiceNumber: new RegExp(search, 'i') },
-        { buyerName: new RegExp(search, 'i') }
+        { invoiceNumber: new RegExp(safeSearch, 'i') },
+        { buyerName: new RegExp(safeSearch, 'i') }
       ];
     }
 

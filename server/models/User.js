@@ -34,8 +34,10 @@ const userSchema = new mongoose.Schema({
     ref: 'Company',
     default: null
   },
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
+  // Never returned by default: these would otherwise be exposed by endpoints
+  // such as GET /api/auth/me.
+  resetPasswordToken: { type: String, select: false },
+  resetPasswordExpires: { type: Date, select: false }
 }, { timestamps: true });
 
 userSchema.pre('save', async function(next) {
