@@ -911,7 +911,7 @@ const ManagerDashboard = () => {
                     <div className="col-span-4">
                       <input
                         type="text"
-                        placeholder="Description (e.g. Kolam Rice)"
+                        placeholder="Description (e.g. Basmati Rice)"
                         value={item.description}
                         onChange={(e) => handleBillLineItemChange(idx, 'description', e.target.value)}
                         required

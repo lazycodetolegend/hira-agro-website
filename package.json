@@ -1,0 +1,13 @@
+{
+  "name": "hira-agro-industry",
+  "version": "1.0.0",
+  "description": "Full MERN stack website for Hira Agro Industry rice mill",
+  "scripts": {
+    "start": "start.bat",
+    "dev": "start.bat",
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev"
+  },
+  "keywords": ["mern", "rice-mill", "hira-agro"],
+  "license": "ISC"
+}

@@ -9,7 +9,7 @@ const stats = [
   { number: '9+', label: 'Years Running' },
   { number: '5000+', label: 'Tonnes / Year' },
   { number: '100+', label: 'Dealer Network' },
-  { number: '12', label: 'Rice Varieties' },
+  { number: '3', label: 'Listed Products' },
 ];
 
 const features = [
@@ -93,7 +93,7 @@ const Home = () => {
               custom={2}
               className="text-cream/80 text-base md:text-xl leading-relaxed mb-10 max-w-xl"
             >
-              Supplying premium Basmati, Sona Masuri, and parboiled Sella rice to wholesalers, retailers, and commercial buyers across India.
+              Our premium rice milling products include Sortex Milled White Rice, authentic Indrayani, Raw Paddy (Dhan), Usna Bhat, Broken Rice (Kanki), and Paddy Husk Biomass. Contact us to confirm wholesale availability and quotes.
             </motion.p>
 
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap items-center gap-4 sm:gap-6">
@@ -214,10 +214,10 @@ const Home = () => {
                 03 — GET STARTED
               </span>
               <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl text-cream font-bold mb-4">
-                Ready to source premium rice?
+                Looking for wholesale rice or biomass fuel?
               </h2>
               <p className="text-cream/70 text-sm md:text-base leading-relaxed">
-                Whether you&apos;re a wholesaler, retailer, or commercial buyer — we have the variety, volume, and quality you need.
+                Inquire about bulk Steam Rice, authentic Indrayani, Raw Paddy (Dhan), Usna Bhat, Broken Rice (Kanki), and Paddy Husk. Contact our team to confirm current stock and truckload delivery.
               </p>
             </div>
 

@@ -106,16 +106,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Col 3: Rice Varieties (3 cols) */}
+          {/* Col 3: Products (3 cols) */}
           <div className="lg:col-span-3 space-y-4">
             <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">Rice Varieties</span>
             <ul className="space-y-2.5 text-sm">
               {[
-                'Royal Basmati 1121',
-                'Super Sona Masuri',
-                'Golden Parboiled Sella',
-                'Aromatic Wada Kolam',
-                'IR64 Raw & Steamed'
+                'Basmati Rice',
+                'Kolam Rice'
               ].map((variety) => (
                 <li key={variety}>
                   <Link

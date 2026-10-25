@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../utils/api';
 import { HiOutlinePaperAirplane, HiOutlinePhone, HiOutlineMail, HiOutlineLocationMarker, HiOutlineClock } from 'react-icons/hi';
@@ -7,7 +8,24 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [searchParams] = useSearchParams();
+  const productParam = searchParams.get('product');
+
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: productParam ? `Hello Hira Agro Industry, I would like to inquire about wholesale pricing, availability, and delivery terms for "${productParam}".` : ''
+  });
+
+  useEffect(() => {
+    if (productParam) {
+      setForm(prev => ({
+        ...prev,
+        message: `Hello Hira Agro Industry, I would like to inquire about wholesale pricing, availability, and delivery terms for "${productParam}".`
+      }));
+    }
+  }, [productParam]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -179,7 +197,7 @@ const Contact = () => {
                           value={form.message}
                           onChange={(e) => handleChange('message', e.target.value)}
                           rows="4"
-                          placeholder="Specify desired rice variety (Basmati, Kolam, Sella), estimated metric tonnes, and delivery location..."
+                          placeholder="Tell us whether you're enquiring about Basmati or Kolam rice, your approximate quantity, and delivery location..."
                           className={`${errors.message ? inputError : inputNormal} resize-none`}
                         />
                         {errors.message && <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.message}</p>}

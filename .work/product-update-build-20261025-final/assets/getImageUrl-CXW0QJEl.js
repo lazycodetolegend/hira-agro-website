@@ -1,0 +1,1 @@
+const a=t=>t?t.startsWith("http://")||t.startsWith("https://")?t:t.startsWith("/uploads/")||t.startsWith("uploads/")?`http://localhost:5000${t.startsWith("/")?t:`/${t}`}`:t:"/images/rice-default.jpg";export{a as g};

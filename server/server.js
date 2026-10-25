@@ -9,6 +9,7 @@ const connectDB = require('./config/db');
 const seedAdmin = require('./utils/seedAdmin');
 const seedCompanies = require('./utils/seedCompanies');
 const migrateCompanyId = require('./utils/migrateCompanyId');
+const seedProducts = require('./utils/seedProducts');
 
 const app = express();
 
@@ -54,6 +55,7 @@ connectDB().then(async () => {
   await seedCompanies();
   await seedAdmin();
   await migrateCompanyId();
+  await seedProducts();
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
