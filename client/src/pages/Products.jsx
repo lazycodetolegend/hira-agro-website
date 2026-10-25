@@ -14,9 +14,7 @@ import SectionHeading from '../components/ui/SectionHeading';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import api from '../utils/api';
-import { coreProducts } from '../data/productsData';
-
-const categories = ['All', 'Rice', 'Indrayani', 'Paddy', 'Bhat', 'Broken Rice', 'Husk', 'Kolam', 'Basmati'];
+import { coreProducts, getProductImage } from '../data/productsData';
 
 // Icon helper per variety
 const getProductIcon = (variety = '') => {
@@ -30,7 +28,6 @@ const getProductIcon = (variety = '') => {
 };
 
 const Products = () => {
-  const [activeVariety, setActiveVariety] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [productsList, setProductsList] = useState(coreProducts);
   const [isLoadingApi, setIsLoadingApi] = useState(false);
@@ -110,13 +107,8 @@ const Products = () => {
 
   const displayedProducts = useMemo(() => {
     return productsList.filter((product) => {
-      const productVariety = product.variety || product.category || '';
-      const matchesVariety =
-        activeVariety === 'All' ||
-        productVariety.toLowerCase() === activeVariety.toLowerCase();
-
       const query = searchQuery.trim().toLowerCase();
-      if (!query) return matchesVariety;
+      if (!query) return true;
 
       const searchableText = [
         product.name,
@@ -131,9 +123,9 @@ const Products = () => {
         .join(' ')
         .toLowerCase();
 
-      return matchesVariety && searchableText.includes(query);
+      return searchableText.includes(query);
     });
-  }, [productsList, activeVariety, searchQuery]);
+  }, [productsList, searchQuery]);
 
   return (
     <div className="animate-fade-in bg-cream min-h-screen">
@@ -164,43 +156,23 @@ const Products = () => {
         </div>
       </section>
 
-      {/* ─── FILTER & SEARCH BAR (Sticky) ─── */}
+      {/* ─── SEARCH & FILTER BAR (Sticky) ─── */}
       <section className="bg-cream/95 backdrop-blur-md sticky top-20 z-40 border-b border-stone/15 py-4 shadow-xs">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-            {/* Category / Variety Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none">
-              {categories.map((variety) => {
-                const isActive = activeVariety === variety;
-                return (
-                  <button
-                    key={variety}
-                    onClick={() => setActiveVariety(variety)}
-                    className={`text-xs md:text-sm font-medium whitespace-nowrap px-4 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                      isActive
-                        ? 'bg-forest text-cream font-semibold shadow-xs'
-                        : 'bg-stone/10 text-stone hover:text-ink hover:bg-stone/20'
-                    }`}
-                  >
-                    {variety}
-                  </button>
-                );
-              })}
-            </div>
-
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             {/* Search Input */}
-            <div className="relative w-full md:w-80 flex-shrink-0">
+            <div className="relative w-full sm:w-96 flex-shrink-0">
               <HiOutlineSearch
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-stone w-4 h-4"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone w-4 h-4"
                 aria-hidden="true"
               />
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search rice, husk, kanki, price..."
+                placeholder="Search products, kanki, husk, price..."
                 aria-label="Search products"
-                className="w-full pl-9 pr-8 py-2 bg-white/70 border border-stone/25 rounded-full text-xs md:text-sm text-ink focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/30 transition-all placeholder:text-stone/60"
+                className="w-full pl-10 pr-8 py-2.5 bg-white/80 border border-stone/25 rounded-full text-xs md:text-sm text-ink focus:outline-none focus:border-forest focus:ring-1 focus:ring-forest/30 transition-all placeholder:text-stone/60"
               />
               {searchQuery && (
                 <button
@@ -212,19 +184,18 @@ const Products = () => {
                 </button>
               )}
             </div>
-          </div>
 
-          {/* Results Count & Quick Info */}
-          <div className="mt-3 flex items-center justify-between text-xs text-stone">
-            <span>
-              Showing <strong className="text-ink font-semibold">{displayedProducts.length}</strong>{' '}
-              {displayedProducts.length === 1 ? 'product' : 'products'}
-              {activeVariety !== 'All' && ` in ${activeVariety}`}
-              {searchQuery && ` matching "${searchQuery}"`}
-            </span>
-            <span className="hidden sm:inline text-[11px] text-stone/80">
-              * Wholesale prices quoted per kg ex-mill (Dahanu)
-            </span>
+            {/* Results Count & Quick Info */}
+            <div className="flex items-center justify-between sm:justify-end gap-4 text-xs text-stone">
+              <span>
+                Showing <strong className="text-ink font-semibold">{displayedProducts.length}</strong>{' '}
+                {displayedProducts.length === 1 ? 'product' : 'products'}
+                {searchQuery && ` matching "${searchQuery}"`}
+              </span>
+              <span className="hidden sm:inline text-[11px] text-stone/80">
+                * Direct mill-gate prices (Dahanu)
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -241,12 +212,9 @@ const Products = () => {
               </p>
               <Button
                 variant="secondary"
-                onClick={() => {
-                  setActiveVariety('All');
-                  setSearchQuery('');
-                }}
+                onClick={() => setSearchQuery('')}
               >
-                Reset Search Filters
+                Clear Search
               </Button>
             </Card>
           ) : (
@@ -261,31 +229,51 @@ const Products = () => {
                     hoverEffect={true}
                     className="flex flex-col h-full bg-white/90 rounded-2xl overflow-hidden border border-stone/20 shadow-xs hover:shadow-md transition-all duration-300 group"
                   >
-                    {/* Top Banner / Graphic Header */}
-                    <div className="relative p-6 bg-gradient-to-br from-forest/10 via-forest/5 to-cream border-b border-stone/15 flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-forest/10 flex items-center justify-center text-forest group-hover:scale-110 transition-transform duration-300">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <span className="text-[11px] uppercase tracking-[0.18em] text-gold font-bold block">
+                    {/* Top Image Showcase */}
+                    <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden bg-forest/5 border-b border-stone/15">
+                      <Link to={`/products/${detailSlug}`} className="block w-full h-full">
+                        <img
+                          src={getProductImage(product)}
+                          alt={product.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/images/rice-default.jpg';
+                          }}
+                        />
+                      </Link>
+
+                      {/* Gradient Overlay for Readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/35 pointer-events-none" />
+
+                      {/* Top Badges */}
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-forest border border-forest/20 shadow-xs">
                             {product.variety}
                           </span>
-                          <span className="text-xs text-stone font-medium">
-                            {product.tag || 'Mill Direct'}
-                          </span>
+                          {product.tag && (
+                            <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-forest/90 backdrop-blur-sm text-[10px] font-semibold text-white shadow-xs">
+                              {product.tag}
+                            </span>
+                          )}
                         </div>
-                      </div>
 
-                      {/* Stock / Wholesale Badge */}
-                      <div className="flex flex-col items-end gap-1">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-full border border-emerald-200">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 backdrop-blur-sm text-emerald-800 text-[10px] font-bold rounded-full border border-emerald-200 shadow-xs">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                           IN STOCK
                         </span>
-                        <span className="text-[10px] text-stone tracking-wide">
-                          {product.wholesaleUnit}
+                      </div>
+
+                      {/* Bottom Info on Image */}
+                      <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between pointer-events-none">
+                        <span className="text-[11px] text-white/95 font-medium bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md">
+                          Packaging: {product.wholesaleUnit}
                         </span>
+                        <div className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm flex items-center justify-center text-forest shadow-xs">
+                          <Icon className="w-4 h-4" />
+                        </div>
                       </div>
                     </div>
 

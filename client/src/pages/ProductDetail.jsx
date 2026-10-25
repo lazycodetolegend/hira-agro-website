@@ -14,7 +14,7 @@ import { GiWheat, GiGrainBundle, GiFactory, GiFlame } from 'react-icons/gi';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { getProductByIdOrSlug, coreProducts } from '../data/productsData';
-import { getImageUrl } from '../utils/getImageUrl';
+import { getImageUrl, getProductImage } from '../utils/getImageUrl';
 
 // Icon helper
 const getProductIcon = (variety = '') => {
@@ -147,25 +147,15 @@ const ProductDetail = () => {
           {/* Left Column — Visual / Details Card */}
           <div className="lg:col-span-5 space-y-6">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-forest/15 via-forest/5 to-cream border border-stone/20 shadow-sm flex items-center justify-center">
-              {product.photoUrl ? (
-                <img
-                  src={getImageUrl(product.photoUrl)}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center text-forest p-8 text-center">
-                  <div className="w-24 h-24 rounded-2xl bg-forest/10 flex items-center justify-center mb-4">
-                    <Icon className="w-12 h-12 text-forest" />
-                  </div>
-                  <span className="font-heading text-2xl text-ink font-bold">
-                    {product.name}
-                  </span>
-                  <span className="text-xs text-gold uppercase tracking-[0.2em] font-bold mt-1">
-                    {product.variety}
-                  </span>
-                </div>
-              )}
+              <img
+                src={getProductImage(product)}
+                alt={product.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/rice-default.jpg';
+                }}
+              />
 
               {/* Status Badge */}
               <div className="absolute top-4 left-4">
@@ -266,12 +256,18 @@ const ProductDetail = () => {
                   Product Specifications
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-xs">
-                  {product.specs.map((spec, i) => (
-                    <div key={i} className="flex items-center justify-between py-1 border-b border-stone/10">
-                      <span className="text-stone font-medium">{spec.label}</span>
-                      <span className="font-semibold text-ink text-right">{spec.value}</span>
-                    </div>
-                  ))}
+                  {product.specs
+                    .filter(
+                      (spec) =>
+                        !spec.label?.toLowerCase().includes('milling') &&
+                        !spec.value?.toLowerCase().includes('silky sortex')
+                    )
+                    .map((spec, i) => (
+                      <div key={i} className="flex items-center justify-between py-1 border-b border-stone/10">
+                        <span className="text-stone font-medium">{spec.label}</span>
+                        <span className="font-semibold text-ink text-right">{spec.value}</span>
+                      </div>
+                    ))}
                 </div>
               </Card>
             )}
@@ -315,17 +311,30 @@ const ProductDetail = () => {
                 <Link
                   key={rel.id}
                   to={`/products/${rel.slug || rel.id}`}
-                  className="p-5 rounded-xl bg-white/80 border border-stone/20 hover:border-forest/40 transition-all hover:shadow-xs group"
+                  className="p-5 rounded-2xl bg-white/80 border border-stone/20 hover:border-forest/40 transition-all hover:shadow-xs group flex flex-col justify-between"
                 >
-                  <span className="text-[10px] uppercase tracking-wider text-gold font-bold block mb-1">
-                    {rel.variety}
-                  </span>
-                  <h4 className="font-heading text-xl font-bold text-ink group-hover:text-forest transition-colors">
-                    {rel.name}
-                  </h4>
-                  <p className="text-xs text-stone mt-2 line-clamp-2">
-                    {rel.description}
-                  </p>
+                  <div>
+                    <div className="w-full aspect-[16/10] rounded-xl overflow-hidden mb-4 bg-forest/5">
+                      <img
+                        src={getProductImage(rel)}
+                        alt={rel.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = '/images/rice-default.jpg';
+                        }}
+                      />
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wider text-gold font-bold block mb-1">
+                      {rel.variety}
+                    </span>
+                    <h4 className="font-heading text-xl font-bold text-ink group-hover:text-forest transition-colors">
+                      {rel.name}
+                    </h4>
+                    <p className="text-xs text-stone mt-2 line-clamp-2">
+                      {rel.description}
+                    </p>
+                  </div>
                   <div className="mt-4 pt-3 border-t border-stone/10 flex items-center justify-between">
                     <span className="font-heading text-xl font-bold text-forest">
                       ₹{rel.ratePerKg} <span className="text-xs font-normal text-stone">/ kg</span>

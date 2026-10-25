@@ -1,3 +1,5 @@
+import { getProductImage } from '../utils/getImageUrl';
+
 export const coreProducts = [
   {
     id: 'rice',
@@ -5,10 +7,11 @@ export const coreProducts = [
     name: 'Milled White Rice (Steam / Raw)',
     variety: 'Rice',
     tag: 'DAILY STAPLE & WHOLESALE',
+    photoUrl: '/images/Milled White Rice.webp',
     ratePerKg: 40,
     priceRange: '₹36 – ₹45 / kg',
     wholesaleUnit: '25 kg & 50 kg PP Bags',
-    description: 'High-grade Sortex-cleaned milled white rice processed with advanced multi-stage destoning, polishing, and optical grading technology. Clean, silky grains that cook fluffy and separate without sticking. Retains rich natural grain aroma, essential nutrients, and clean taste. Ideal for daily household consumption, hotel & catering bulk supplies, and regional wholesale distribution.',
+    description: 'High-grade Sortex-cleaned milled white rice processed with advanced multi-stage destoning, polishing, and optical grading technology. Clean, uniform grains that cook fluffy and separate without sticking. Retains rich natural grain aroma, essential nutrients, and clean taste. Ideal for daily household consumption, hotel & catering bulk supplies, and regional wholesale distribution.',
     specs: [
       { label: 'Grain Type', value: 'Medium / Slender Grain' },
       { label: 'Purity & Grade', value: '100% Sortex Cleaned' },
@@ -32,6 +35,7 @@ export const coreProducts = [
     name: 'Indrayani Rice (Maval Fragrant)',
     variety: 'Indrayani',
     tag: 'MAHARASHTRA SPECIALTY',
+    photoUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80',
     ratePerKg: 58,
     priceRange: '₹52 – ₹65 / kg',
     wholesaleUnit: '25 kg & 30 kg PP Bags',
@@ -59,6 +63,7 @@ export const coreProducts = [
     name: 'Raw Paddy Grain (Dhan / Farm Fresh)',
     variety: 'Paddy',
     tag: 'RAW HARVEST & SEED GRADE',
+    photoUrl: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80',
     ratePerKg: 24,
     priceRange: '₹22 – ₹28 / kg (₹2,200 – ₹2,800 / Quintal)',
     wholesaleUnit: '50 kg Gunny Bags / Loose Truckloads / Quintal',
@@ -86,6 +91,7 @@ export const coreProducts = [
     name: 'Usna Bhat Rice (Parboiled / Traditional Table Rice)',
     variety: 'Bhat',
     tag: 'TRADITIONAL KONKAN TABLE RICE',
+    photoUrl: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80',
     ratePerKg: 36,
     priceRange: '₹34 – ₹42 / kg',
     wholesaleUnit: '25 kg & 50 kg PP Bags',
@@ -113,6 +119,7 @@ export const coreProducts = [
     name: 'Broken Rice (Kanki / Khanda)',
     variety: 'Broken Rice',
     tag: 'FOOD GRADE & ANIMAL FEED',
+    photoUrl: '/images/Broken-Rice.jpg',
     ratePerKg: 25,
     priceRange: '₹22 – ₹28 / kg',
     wholesaleUnit: '25 kg & 50 kg PP Bags',
@@ -140,6 +147,7 @@ export const coreProducts = [
     name: 'Rice Husk (Paddy Hull Biomass)',
     variety: 'Husk',
     tag: 'ECO BIOMASS FUEL & BEDDING',
+    photoUrl: '/images/Pure Rice Husk.jpg',
     ratePerKg: 6,
     priceRange: '₹5 – ₹8 / kg (₹5,000 – ₹7,500 / Tonne)',
     wholesaleUnit: 'Loose Bulk / 30-40 kg Bags / Metric Ton',
@@ -168,6 +176,7 @@ export const coreProducts = [
     name: 'Kolam Rice (Wada Kolam / Lachkari)',
     variety: 'Kolam',
     tag: 'FINE TABLE RICE',
+    photoUrl: '/images/rice-default.jpg',
     ratePerKg: 48,
     priceRange: '₹44 – ₹54 / kg',
     wholesaleUnit: '25 kg & 50 kg PP Bags',
@@ -194,6 +203,7 @@ export const coreProducts = [
     name: 'Basmati Rice (Long Grain Royal)',
     variety: 'Basmati',
     tag: 'PREMIUM AROMATIC GRAIN',
+    photoUrl: 'https://images.unsplash.com/photo-1596560548464-f010549b84d7?auto=format&fit=crop&w=800&q=80',
     ratePerKg: 85,
     priceRange: '₹75 – ₹95 / kg',
     wholesaleUnit: '25 kg PP Bags',
@@ -227,3 +237,5 @@ export const getProductByIdOrSlug = (idOrSlug) => {
       p.name.toLowerCase().includes(cleanId)
   );
 };
+
+export { getProductImage };

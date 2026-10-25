@@ -28,3 +28,42 @@ export const getImageUrl = (photoUrl) => {
 
   return photoUrl;
 };
+
+/**
+ * Helper to get the most accurate product image URL,
+ * falling back gracefully based on the variety/category.
+ */
+export const getProductImage = (product) => {
+  if (!product) return '/images/rice-default.jpg';
+
+  const rawUrl = product.photoUrl || product.imageUrl;
+  if (rawUrl) {
+    return getImageUrl(rawUrl);
+  }
+
+  const term = `${product.variety || ''} ${product.category || ''} ${product.name || ''} ${product.slug || ''} ${product.id || ''}`.toLowerCase();
+
+  if (term.includes('husk')) {
+    return '/images/Pure Rice Husk.jpg';
+  }
+  if (term.includes('broken') || term.includes('kanki') || term.includes('khanda')) {
+    return '/images/Broken-Rice.jpg';
+  }
+  if (term.includes('indrayani')) {
+    return 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80';
+  }
+  if (term.includes('paddy') || term.includes('dhan')) {
+    return 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?auto=format&fit=crop&w=800&q=80';
+  }
+  if (term.includes('bhat') || term.includes('usna') || term.includes('ukada')) {
+    return 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80';
+  }
+  if (term.includes('kolam')) {
+    return '/images/rice-default.jpg';
+  }
+  if (term.includes('basmati')) {
+    return 'https://images.unsplash.com/photo-1596560548464-f010549b84d7?auto=format&fit=crop&w=800&q=80';
+  }
+
+  return '/images/Milled White Rice.webp';
+};

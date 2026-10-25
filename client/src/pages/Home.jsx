@@ -3,14 +3,6 @@ import { motion } from 'framer-motion';
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import Button from '../components/ui/Button';
 import SectionHeading from '../components/ui/SectionHeading';
-import AnimatedCounter from '../components/ui/AnimatedCounter';
-
-const stats = [
-  { number: '9+', label: 'Years Running' },
-  { number: '5000+', label: 'Tonnes / Year' },
-  { number: '100+', label: 'Dealer Network' },
-  { number: '3', label: 'Listed Products' },
-];
 
 const features = [
   {
@@ -140,62 +132,26 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ─── WHY HIRA AGRO — asymmetric split ─── */}
+      {/* ─── WHY HIRA AGRO ─── */}
       <section className="py-20 md:py-28 bg-cream border-t border-stone/15">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-14 items-center">
-            {/* Image */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, ease: 'easeOut' }}
-              className="md:col-span-5"
-            >
-              <div className="relative rounded-3xl overflow-hidden shadow-md">
-                <img
-                  src="/images/silos.webp"
-                  alt="Hira Agro Industry milling plant and silos"
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full aspect-[4/5] object-cover"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-forest/90 via-forest/40 to-transparent p-6 md:p-8">
-                  <p className="text-cream font-semibold text-sm">Processing plant at Jamshet, Ashagad</p>
-                  <p className="text-cream/60 text-xs mt-1">Tal. Dahanu, Dist. Palghar — 401602</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-              className="md:col-span-7 md:pl-4 space-y-6"
-            >
-              <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">
-                02 — OUR LEGACY
-              </span>
-              <h2 className="font-heading text-3xl md:text-5xl leading-[1.1] text-ink font-bold">
-                Why Hira Agro Industry?
-              </h2>
-              <p className="text-stone text-base leading-relaxed max-w-lg">
-                Located at Jamshet, Ashagad, Tal. Dahanu, Dist. Palghar — Hira Agro Industry combines grain expertise with modern milling technology to process, polish, and distribute grain-perfect rice with absolute reliability.
-              </p>
-
-              {/* Stats row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4 border-t border-stone/15">
-                {stats.map((stat, idx) => (
-                  <div key={idx}>
-                    <AnimatedCounter value={stat.number} className="block mb-1 font-bold text-3xl text-forest" />
-                    <span className="text-xs text-stone tracking-wide uppercase font-medium">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+        <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="space-y-6"
+          >
+            <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">
+              02 — OUR LEGACY
+            </span>
+            <h2 className="font-heading text-3xl md:text-5xl leading-[1.1] text-ink font-bold">
+              Why Hira Agro Industry?
+            </h2>
+            <p className="text-stone text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+              Located at Jamshet, Ashagad, Tal. Dahanu, Dist. Palghar — Hira Agro Industry combines grain expertise with modern milling technology to process, polish, and distribute grain-perfect rice with absolute reliability.
+            </p>
+          </motion.div>
         </div>
       </section>
 

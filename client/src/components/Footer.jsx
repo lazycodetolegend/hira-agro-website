@@ -62,8 +62,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           
-          {/* Col 1: Heritage & Trust (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
+          {/* Col 1: Heritage & Trust (5 cols) */}
+          <div className="lg:col-span-5 space-y-4">
             <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">Heritage & Purity</span>
             <p className="text-sm text-cream/70 leading-relaxed">
               Equipped with modern de-stoning, multi-stage polishing, and computerised optical grain sortex technology at our facility in Dahanu, Palghar.
@@ -84,8 +84,8 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Col 2: Navigation (2 cols) */}
-          <div className="lg:col-span-2 space-y-4">
+          {/* Col 2: Navigation (3 cols) */}
+          <div className="lg:col-span-3 space-y-4">
             <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">Navigation</span>
             <ul className="space-y-2.5 text-sm">
               {[
@@ -106,28 +106,8 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Col 3: Products (3 cols) */}
-          <div className="lg:col-span-3 space-y-4">
-            <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">Rice Varieties</span>
-            <ul className="space-y-2.5 text-sm">
-              {[
-                'Basmati Rice',
-                'Kolam Rice'
-              ].map((variety) => (
-                <li key={variety}>
-                  <Link
-                    to="/products"
-                    className="text-cream/60 hover:text-gold transition-colors duration-200 flex items-center gap-1.5"
-                  >
-                    <span className="text-gold text-xs">›</span> {variety}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 4: Plant Location & Office (3 cols) */}
-          <div className="lg:col-span-3 space-y-4">
+          {/* Col 3: Plant Location & Office (4 cols) */}
+          <div className="lg:col-span-4 space-y-4">
             <span className="block text-xs tracking-[0.2em] uppercase text-gold font-bold">Milling Plant</span>
             <div className="space-y-3 text-xs text-cream/70">
               <div className="flex items-start gap-2.5">
