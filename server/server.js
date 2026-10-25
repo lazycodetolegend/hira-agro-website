@@ -50,16 +50,18 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-// Connect DB & start server
-connectDB().then(async () => {
-  await seedCompanies();
-  await seedAdmin();
-  await migrateCompanyId();
-  await seedProducts();
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  connectDB().then(async () => {
+    try {
+      await seedCompanies();
+      await seedAdmin();
+      await migrateCompanyId();
+      await seedProducts();
+    } catch (seedErr) {
+      console.warn('Seeding note:', seedErr.message);
+    }
+  }).catch(err => {
+    console.warn('Database note:', err.message);
   });
-}).catch(err => {
-  console.error('Failed to connect to MongoDB:', err.message);
-  process.exit(1);
 });
