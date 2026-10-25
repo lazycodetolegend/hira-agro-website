@@ -1,49 +1,62 @@
 const nodemailer = require('nodemailer');
 
-const sendEmail = async ({ to, subject, html, text }) => {
+const sendEmail = async ({ to, subject, html, text, replyTo }) => {
   try {
     const emailUser = process.env.EMAIL_USER;
     const emailPass = process.env.EMAIL_PASS;
 
-    // If EMAIL_PASS is not configured in .env, simulate and log in terminal
+    // If EMAIL_PASS is not configured in environment, log clearly
     if (!emailUser || !emailPass || emailPass.trim() === '') {
       console.log('\n================ [EMAIL NOTIFICATION LOG] ================');
       console.log(`📩 To: ${to}`);
       console.log(`📌 Subject: ${subject}`);
       console.log(`📄 Message:\n${text || html}`);
       console.log('----------------------------------------------------------');
-      console.log('💡 NOTE: Real email was NOT sent to inbox because EMAIL_PASS is empty in server/.env.');
-      console.log('👉 To receive real emails in your Gmail inbox:');
-      console.log('   1. Go to Google Account > Security > 2-Step Verification > App Passwords');
-      console.log('   2. Generate a 16-character App Password for "Mail"');
-      console.log('   3. Set EMAIL_PASS=your_16_digit_app_password in server/.env');
+      console.log('⚠️ [PRODUCTION ALERT]: Real email was NOT dispatched.');
+      console.log('👉 Reason: EMAIL_PASS is missing in environment variables.');
+      console.log('👉 For Render / Cloud Host: Add EMAIL_USER, EMAIL_PASS, and COMPANY_EMAIL in your Cloud Dashboard Environment Variables.');
       console.log('===========================================================\n');
-      return true;
+      return false;
     }
 
-    const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE || 'gmail',
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: Number(process.env.EMAIL_PORT) || 587,
-      secure: process.env.EMAIL_SECURE === 'true',
-      auth: {
-        user: emailUser,
-        pass: emailPass,
-      },
-    });
+    const transportConfig = (process.env.EMAIL_SERVICE && process.env.EMAIL_SERVICE.toLowerCase() === 'gmail')
+      ? {
+          service: 'gmail',
+          auth: {
+            user: emailUser,
+            pass: emailPass,
+          },
+        }
+      : {
+          host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+          port: Number(process.env.EMAIL_PORT) || 465,
+          secure: process.env.EMAIL_SECURE === 'true' || (!process.env.EMAIL_PORT && !process.env.EMAIL_SERVICE),
+          auth: {
+            user: emailUser,
+            pass: emailPass,
+          },
+        };
 
-    const info = await transporter.sendMail({
+    const transporter = nodemailer.createTransport(transportConfig);
+
+    const mailOptions = {
       from: `"Hira Agro Industry" <${emailUser}>`,
       to,
       subject,
       text,
-      html,
-    });
+      html: html || (text ? text.replace(/\n/g, '<br/>') : undefined),
+    };
 
-    console.log('✅ Real email dispatched successfully:', info.messageId);
+    if (replyTo) {
+      mailOptions.replyTo = replyTo;
+    }
+
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log(`✅ Email delivered to ${to} (${info.messageId})`);
     return true;
   } catch (error) {
-    console.error('❌ Error sending real email via SMTP:', error.message);
+    console.error(`❌ Error sending real email via SMTP to ${to}:`, error.message);
     return false;
   }
 };
