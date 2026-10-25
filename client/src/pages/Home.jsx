@@ -85,7 +85,7 @@ const Home = () => {
               custom={2}
               className="text-cream/80 text-base md:text-xl leading-relaxed mb-10 max-w-xl"
             >
-              Our premium rice milling products include Sortex Milled White Rice, authentic Indrayani, Raw Paddy (Dhan), Usna Bhat, Broken Rice (Kanki), and Paddy Husk Biomass. Contact us to confirm wholesale availability and quotes.
+              Our premium rice milling products include Sortex Milled White Rice, authentic Indrayani, Raw Paddy (Dhan), Broken Rice (Kanki), and Paddy Husk Biomass. Contact us to confirm wholesale availability and quotes.
             </motion.p>
 
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap items-center gap-4 sm:gap-6">
@@ -173,7 +173,7 @@ const Home = () => {
                 Looking for wholesale rice or biomass fuel?
               </h2>
               <p className="text-cream/70 text-sm md:text-base leading-relaxed">
-                Inquire about bulk Steam Rice, authentic Indrayani, Raw Paddy (Dhan), Usna Bhat, Broken Rice (Kanki), and Paddy Husk. Contact our team to confirm current stock and truckload delivery.
+                Inquire about bulk Steam Rice, authentic Indrayani, Raw Paddy (Dhan), Broken Rice (Kanki), and Paddy Husk. Contact our team to confirm current stock and truckload delivery.
               </p>
             </div>
 

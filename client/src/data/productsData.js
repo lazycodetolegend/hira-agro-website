@@ -86,34 +86,6 @@ export const coreProducts = [
     category: 'Paddy'
   },
   {
-    id: 'bhat',
-    slug: 'bhat',
-    name: 'Usna Bhat Rice (Parboiled / Traditional Table Rice)',
-    variety: 'Bhat',
-    tag: 'TRADITIONAL KONKAN TABLE RICE',
-    photoUrl: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80',
-    ratePerKg: 36,
-    priceRange: '₹34 – ₹42 / kg',
-    wholesaleUnit: '25 kg & 50 kg PP Bags',
-    description: 'Traditional parboiled table rice (locally known as Usna Tandul / Ukada Bhat) widely cherished across coastal Maharashtra, Konkan, and Palghar. Hydrothermally parboiled before gentle milling to drive grain nutrients and bran goodness into the core. Cooks firm, non-sticky, and fluffy, making it the most nourishing daily staple for steamed bhat and curries.',
-    specs: [
-      { label: 'Grain Type', value: 'Medium Bold Parboiled (Usna)' },
-      { label: 'Processing', value: 'Hydrothermally Soaked, Steamed & Milled' },
-      { label: 'Nutritional Value', value: 'High Thiamine & Fiber Content' },
-      { label: 'Cooking Quality', value: 'Firm, Fluffy & Non-Sticky' },
-      { label: 'Moisture', value: '< 13% Max' },
-    ],
-    highlights: ['Traditional Parboiled (Usna)', 'Nutrient-Dense Bran Infused', 'Firm Non-Sticky Fluffy Grains', 'Easy to Digest Daily Staple'],
-    applications: [
-      'Daily family lunch and dinner (Varan Bhat, plain steamed bhat)',
-      'Traditional coastal Maharashtra and Konkan dining',
-      'Wholesale grain stores, mess, and catering contracts',
-      'Nutrient-conscious staple dining'
-    ],
-    inStock: true,
-    category: 'Bhat'
-  },
-  {
     id: 'broken-rice',
     slug: 'broken-rice',
     name: 'Broken Rice (Kanki / Khanda)',
@@ -169,60 +141,6 @@ export const coreProducts = [
     ],
     inStock: true,
     category: 'Husk'
-  },
-  {
-    id: 'kolam-rice',
-    slug: 'kolam-rice',
-    name: 'Kolam Rice (Wada Kolam / Lachkari)',
-    variety: 'Kolam',
-    tag: 'FINE TABLE RICE',
-    photoUrl: '/images/rice-default.jpg',
-    ratePerKg: 48,
-    priceRange: '₹44 – ₹54 / kg',
-    wholesaleUnit: '25 kg & 50 kg PP Bags',
-    description: 'Renowned everyday table rice famous across western India for its tiny, slender grains, soft texture, and mild pleasant aroma. Cooks smoothly without getting sticky and digests easily. Perfect for daily family meals, steamed rice, and curries.',
-    specs: [
-      { label: 'Grain Length', value: 'Short to Medium Slender' },
-      { label: 'Color', value: 'Pearlescent White' },
-      { label: 'Moisture', value: '< 13%' },
-      { label: 'Cooking Texture', value: 'Soft & Separate Grains' },
-    ],
-    highlights: ['Light & Easy to Digest', 'Uniform Slender Grain', 'Daily Dining Staple', 'Sortex Cleaned'],
-    applications: [
-      'Daily family lunch & dinner',
-      'Steamed plain rice & curries',
-      'Pulao & lemon rice',
-      'Wholesale kirana & supermarket resale'
-    ],
-    inStock: true,
-    category: 'Kolam'
-  },
-  {
-    id: 'basmati-rice',
-    slug: 'basmati-rice',
-    name: 'Basmati Rice (Long Grain Royal)',
-    variety: 'Basmati',
-    tag: 'PREMIUM AROMATIC GRAIN',
-    photoUrl: 'https://images.unsplash.com/photo-1596560548464-f010549b84d7?auto=format&fit=crop&w=800&q=80',
-    ratePerKg: 85,
-    priceRange: '₹75 – ₹95 / kg',
-    wholesaleUnit: '25 kg PP Bags',
-    description: 'Celebrated royal long-grain aromatic rice known for its majestic grain elongation, delicate sweet scent, and exquisite fluffy finish. Matured and polished for celebratory biryanis, royal pulaos, and gourmet catering.',
-    specs: [
-      { label: 'Average Grain Length', value: '7.8mm – 8.3mm+ (Aged)' },
-      { label: 'Aroma', value: 'Classic Royal Basmati Fragrance' },
-      { label: 'Elongation Ratio', value: '2x+ upon cooking' },
-      { label: 'Moisture', value: '< 12%' },
-    ],
-    highlights: ['Extra Long Grain Elongation', 'Signature Basmati Scent', 'Aged for Maximum Fluffiness', 'Catering & Export Grade'],
-    applications: [
-      'Hyderabadi & Dum Biryani',
-      'Shahi Pulao & Jeera Rice',
-      'Weddings & luxury banquet catering',
-      'Premium retail distribution'
-    ],
-    inStock: true,
-    category: 'Basmati'
   }
 ];
 

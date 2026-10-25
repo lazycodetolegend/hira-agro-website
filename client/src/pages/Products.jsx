@@ -41,56 +41,33 @@ const Products = () => {
         const res = await api.get('/products');
         const apiProds = res.data?.products || [];
         if (isMounted && apiProds.length > 0) {
-          // Merge API products with our rich default catalog
-          const merged = coreProducts.map((core) => {
-            const match = apiProds.find(
-              (p) =>
-                (p.variety && p.variety.toLowerCase() === core.variety.toLowerCase()) ||
-                (p.name && p.name.toLowerCase().includes(core.variety.toLowerCase()))
+          // Map DB products directly so website always matches database / admin dashboard
+          const mapped = apiProds.map((dbP) => {
+            const rich = coreProducts.find(
+              (c) =>
+                (dbP.variety && c.variety && dbP.variety.toLowerCase() === c.variety.toLowerCase()) ||
+                (dbP.name && c.name && dbP.name.toLowerCase().includes(c.variety.toLowerCase()))
             );
-            if (match) {
-              return {
-                ...core,
-                _id: match._id,
-                ratePerKg: match.ratePerKg || core.ratePerKg,
-                stockQuantity: match.stockQuantity ?? core.stockQuantity,
-                isAvailable: match.isAvailable ?? core.inStock,
-                photoUrl: match.photoUrl || core.photoUrl,
-              };
-            }
-            return core;
+            return {
+              id: dbP._id,
+              _id: dbP._id,
+              slug: rich?.slug || dbP._id,
+              name: dbP.name,
+              variety: dbP.variety || 'Rice',
+              tag: rich?.tag || 'WHOLESALE PRODUCT',
+              ratePerKg: dbP.ratePerKg || (rich ? rich.ratePerKg : 0),
+              priceRange: rich?.priceRange || ('₹' + (dbP.ratePerKg || 0) + ' / kg'),
+              wholesaleUnit: dbP.unit ? (dbP.unit.toLowerCase().includes('bag') ? dbP.unit : (dbP.unit + ' Bags')) : (rich?.wholesaleUnit || '25 kg & 50 kg PP Bags'),
+              description: dbP.description || rich?.description || 'Quality grain product processed at Hira Agro Industry.',
+              specs: rich?.specs || [{ label: 'Unit', value: dbP.unit || 'kg' }],
+              highlights: rich?.highlights || ['Mill Direct Supply', 'Standard Quality Checked'],
+              applications: rich?.applications || ['Wholesale and retail consumption'],
+              inStock: dbP.isAvailable !== false,
+              category: dbP.variety || 'Rice',
+              photoUrl: dbP.photoUrl || rich?.photoUrl,
+            };
           });
-
-          // Add any other products from DB that are not in coreProducts
-          apiProds.forEach((dbP) => {
-            const alreadyExists = merged.some(
-              (m) =>
-                m._id === dbP._id ||
-                (m.variety && dbP.variety && m.variety.toLowerCase() === dbP.variety.toLowerCase())
-            );
-            if (!alreadyExists) {
-              merged.push({
-                id: dbP._id,
-                _id: dbP._id,
-                slug: dbP._id,
-                name: dbP.name,
-                variety: dbP.variety || 'Rice',
-                tag: 'WHOLESALE PRODUCT',
-                ratePerKg: dbP.ratePerKg || 0,
-                priceRange: `₹${dbP.ratePerKg || 0} / kg`,
-                wholesaleUnit: dbP.unit || 'kg',
-                description: dbP.description || 'Quality grain product processed at Hira Agro Industry.',
-                specs: [{ label: 'Unit', value: dbP.unit || 'kg' }],
-                highlights: ['Mill Direct Supply', 'Standard Quality Checked'],
-                applications: ['Wholesale and retail consumption'],
-                inStock: dbP.isAvailable !== false,
-                category: dbP.variety || 'Rice',
-                photoUrl: dbP.photoUrl,
-              });
-            }
-          });
-
-          setProductsList(merged);
+          setProductsList(mapped);
         }
       } catch (err) {
         // Fallback gracefully to coreProducts
@@ -135,7 +112,7 @@ const Products = () => {
           <SectionHeading
             label="MILL CATALOGUE & CURRENT PRICING"
             title="Premium Rice Mill Products"
-            subtitle="Explore our core rice milling products including Steam Rice, authentic Indrayani, Raw Paddy, Usna Bhat, Broken Rice (Kanki), and Paddy Husk Biomass. Direct mill-gate rates with wholesale supply across Maharashtra & Gujarat."
+            subtitle="Explore our core rice milling products including Steam Rice, authentic Indrayani, Raw Paddy, Broken Rice (Kanki), and Paddy Husk Biomass. Direct mill-gate rates with wholesale supply across Maharashtra & Gujarat."
           />
 
           {/* Quick Mill Assurance Badges */}
